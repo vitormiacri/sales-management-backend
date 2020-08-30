@@ -1,8 +1,29 @@
+import { Op } from 'sequelize';
+import Client from '../Models/Client';
 import CreateClientService from '../services/client/CreateClientService';
 import UpdateClientService from '../services/client/UpdateClientService';
-import DeleteUserService from '../services/client/DeleteClientService';
+import DeleteClientService from '../services/client/DeleteClientService';
 
 class ClientController {
+  async index(req, res) {
+    try {
+      const { name } = req.query;
+      const where = {};
+      if (name) {
+        where.name = {
+          [Op.or]: {
+            [Op.eq]: name,
+            [Op.substring]: name,
+          },
+        };
+      }
+      const allClients = await Client.findAndCountAll({ where: where || null });
+      return res.status(201).json(allClients);
+    } catch (err) {
+      return res.status(400).json({ error: err.message });
+    }
+  }
+
   async store(req, res) {
     try {
       const client = await CreateClientService.run({

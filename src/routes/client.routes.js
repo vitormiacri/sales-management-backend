@@ -13,5 +13,6 @@ clientRoutes.use(authMiddleware);
 clientRoutes.post('/', validateClientStore, ClientController.store);
 clientRoutes.put('/:id', validateClientUpdate, ClientController.update);
 clientRoutes.delete('/:id', ClientController.delete);
+clientRoutes.get('/', ClientController.index);
 
 export default clientRoutes;
