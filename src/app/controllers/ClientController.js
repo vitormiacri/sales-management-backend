@@ -30,8 +30,8 @@ class ClientController {
 
   async delete(req, res) {
     try {
-      await DeleteUserService.run({
-        userId: req.params.id,
+      await DeleteClientService.run({
+        clientId: req.params.id,
       });
 
       return res.status(200).json({ success: true });

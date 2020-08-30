@@ -1,17 +1,17 @@
-import User from '../../Models/User';
+import Client from '../../Models/Client';
 
-class DeleteUserService {
-  async run({ userId }) {
-    const user = await User.findByPk(userId);
+class DeleteClientService {
+  async run({ clientId }) {
+    const client = await Client.findByPk(clientId);
 
-    if (!user) {
-      throw new Error('Usuário não encontrado.');
+    if (!client) {
+      throw new Error('Cliente não encontrado.');
     }
 
-    await user.destroy();
+    await client.destroy();
 
     return true;
   }
 }
 
-export default new DeleteUserService();
+export default new DeleteClientService();
