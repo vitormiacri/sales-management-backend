@@ -1,24 +1,17 @@
-import User from '../../Models/User';
+import Client from '../../Models/Client';
 
-class UpdateUserService {
-  async run({ user, sessionUserId }) {
-    const { email } = user;
-    const sessionUser = await User.findByPk(sessionUserId);
+class UpdateClientService {
+  async run({ client, clientId }) {
+    const findClient = await Client.findByPk(clientId);
 
-    if (email !== sessionUser.email) {
-      const userExists = await User.findOne({ where: { email } });
-      if (userExists) {
-        throw new Error('Usuário já existe');
-      }
-    }
-    const { id, name } = await user.update(user);
+    const { id, name, address } = await findClient.update(client);
 
     return {
       id,
       name,
-      email,
+      address,
     };
   }
 }
 
-export default new UpdateUserService();
+export default new UpdateClientService();

@@ -17,12 +17,12 @@ class ClientController {
 
   async update(req, res) {
     try {
-      const user = UpdateClientService.run({
-        user: req.body,
-        sessionUserId: req.userId,
+      const client = await UpdateClientService.run({
+        client: req.body,
+        clientId: req.params.id,
       });
 
-      return res.status(201).json(user);
+      return res.status(201).json(client);
     } catch (err) {
       return res.status(400).json({ error: err.message });
     }

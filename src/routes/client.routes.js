@@ -11,7 +11,6 @@ const clientRoutes = Router();
 clientRoutes.use(authMiddleware);
 
 clientRoutes.post('/', validateClientStore, ClientController.store);
-clientRoutes.put('/', validateClientUpdate, ClientController.update);
-clientRoutes.delete('/', validateClientUpdate, ClientController.delete);
+clientRoutes.put('/:id', validateClientUpdate, ClientController.update);
 
 export default clientRoutes;
