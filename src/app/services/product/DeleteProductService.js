@@ -1,17 +1,17 @@
-import Client from '../../Models/Client';
+import Product from '../../Models/Product';
 
-class DeleteClientService {
-  async run({ clientId }) {
-    const client = await Client.findByPk(clientId);
+class DeleteProductService {
+  async run({ productId }) {
+    const product = await Product.findByPk(productId);
 
-    if (!client) {
-      throw new Error('Cliente não encontrado.');
+    if (!product) {
+      throw new Error('Produto não encontrado.');
     }
 
-    await client.destroy();
+    await product.destroy();
 
     return true;
   }
 }
 
-export default new DeleteClientService();
+export default new DeleteProductService();
