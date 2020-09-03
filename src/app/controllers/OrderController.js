@@ -4,6 +4,7 @@ import CreateOrderService from '../services/order/CreateOrderService';
 import UpdateOrderService from '../services/order/UpdateOrderService';
 import DeleteOrderService from '../services/order/DeleteOrderService';
 import Client from '../Models/Client';
+import Product from '../Models/Product';
 
 class OrderController {
   async index(req, res) {
@@ -17,10 +18,20 @@ class OrderController {
       }
       const allOrders = await Order.findAndCountAll({
         where: where || null,
-        include: {
-          model: Client,
-          as: 'client',
-        },
+        include: [
+          {
+            model: Client,
+            as: 'client',
+            attributes: ['name', 'address'],
+          },
+          {
+            model: Product,
+            attributes: ['name', 'price', 'cost'],
+            through: {
+              attributes: [],
+            },
+          },
+        ],
       });
       return res.status(201).json(allOrders);
     } catch (err) {
