@@ -17,6 +17,7 @@ class Order extends Model {
 
   static associate(models) {
     this.belongsTo(models.Client, { foreignKey: 'client_id', as: 'client' });
+    this.belongsToMany(models.Product, { through: models.OrdersProducts });
   }
 }
 

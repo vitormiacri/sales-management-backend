@@ -15,6 +15,10 @@ class Product extends Model {
 
     return this;
   }
+
+  static associate(models) {
+    this.belongsToMany(models.Order, { through: models.OrdersProducts });
+  }
 }
 
 export default Product;
