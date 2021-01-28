@@ -15,6 +15,8 @@ module.exports = {
     sourceType: 'module',
   },
   rules: {
+    'no-await-in-loop': 'off',
+    'no-restricted-syntax': 'off',
     'no-console': 'off',
     'prettier/prettier': 'error',
     'class-methods-use-this': 'off',
