@@ -7,18 +7,24 @@ import DeleteProductService from '../services/product/DeleteProductService';
 class ProductController {
   async index(req, res) {
     try {
-      const { name } = req.query;
+      const { name, id, page, limit } = req.query;
       const where = {};
       if (name) {
         where.name = {
           [Op.or]: {
-            [Op.eq]: name,
+            [Op.iLike]: `%${name}%`,
             [Op.substring]: name,
           },
         };
       }
+      if (id) {
+        where.id = id;
+      }
       const allProducts = await Product.findAndCountAll({
         where: where || null,
+        limit: limit && Number(limit),
+        offset: page && (Number(page) - 1) * limit,
+        order: [['id', 'ASC']],
       });
       return res.status(201).json(allProducts);
     } catch (err) {
