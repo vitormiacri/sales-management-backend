@@ -7,17 +7,25 @@ import DeleteClientService from '../services/client/DeleteClientService';
 class ClientController {
   async index(req, res) {
     try {
-      const { name } = req.query;
+      const { name, id, page, limit } = req.query;
       const where = {};
       if (name) {
         where.name = {
           [Op.or]: {
-            [Op.eq]: name,
+            [Op.iLike]: `%${name}%`,
             [Op.substring]: name,
           },
         };
       }
-      const allClients = await Client.findAndCountAll({ where: where || null });
+      if (id) {
+        where.id = id;
+      }
+      const allClients = await Client.findAndCountAll({
+        where: where || null,
+        limit: limit && Number(limit),
+        offset: page && (Number(page) - 1) * limit,
+        order: [['id', 'ASC']],
+      });
       return res.status(201).json(allClients);
     } catch (err) {
       return res.status(400).json({ error: err.message });
