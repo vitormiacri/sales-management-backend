@@ -12,6 +12,8 @@ userRoutes.post('/', validateUserStore, UserController.store);
 
 userRoutes.use(authMiddleware);
 
+userRoutes.delete('/:id', UserController.delete);
 userRoutes.put('/', validateUserUpdate, UserController.update);
+userRoutes.get('/', UserController.index);
 
 export default userRoutes;
