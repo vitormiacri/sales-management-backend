@@ -6,10 +6,13 @@ export default async (req, res, next) => {
       total_value: Yup.number().required(
         'O valor total do pedido é obrigatório'
       ),
-      payment_method: Yup.string().required('O nome é obrigatório'),
-      payment_date: Yup.date().required('A data inicial é obrigatória.'),
-      discount: Yup.number().required('A quantidade é obrigatória'),
-      products: Yup.array(Yup.number())
+      client_id: Yup.number().required('O cliente é obrigatório'),
+      payment_method: Yup.string().required(
+        'O método de pagamento é obrigatório'
+      ),
+      payment_date: Yup.date(),
+      discount: Yup.number(),
+      products: Yup.array(Yup.object())
         .min(1)
         .required('Informe um produto'),
     });

@@ -1,7 +1,7 @@
 import { Router } from 'express';
 
 import OrderController from '../app/controllers/OrderController';
-import validateOrder from '../app/validators/order/OrderStoreAndUpdate';
+import validateOrder from '../app/validators/order/OrderStore';
 
 import authMiddleware from '../app/middlewares/auth';
 
