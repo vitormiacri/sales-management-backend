@@ -9,31 +9,50 @@ import Product from '../Models/Product';
 class OrderController {
   async index(req, res) {
     try {
-      const { client_id } = req.query;
+      const { id, page, limit } = req.query;
       const where = {};
-      if (client_id) {
-        where.client_id = {
-          [Op.eq]: client_id,
+      if (id) {
+        where.id = {
+          [Op.eq]: id,
         };
       }
-      const allOrders = await Order.findAndCountAll({
+      const allOrders = await Order.findAll({
         where: where || null,
+        attributes: [
+          'id',
+          'total_value',
+          'payment_date',
+          'payment_method',
+          'discount',
+          'createdAt',
+        ],
         include: [
           {
             model: Client,
             as: 'client',
-            attributes: ['name', 'address'],
+            attributes: ['id', 'name', 'address'],
           },
           {
             model: Product,
             attributes: ['name', 'price', 'cost'],
             through: {
-              attributes: [],
+              attributes: ['price', 'quantity'],
             },
           },
         ],
+        limit: limit && Number(limit),
+        offset: page && (Number(page) - 1) * limit,
+        order: [['id', 'ASC']],
       });
-      return res.status(201).json(allOrders);
+
+      const countOrders = await Order.count({
+        where: where || null,
+      });
+
+      return res.status(200).json({
+        count: countOrders,
+        rows: allOrders,
+      });
     } catch (err) {
       return res.status(400).json({ error: err.message });
     }

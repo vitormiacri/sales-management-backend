@@ -5,17 +5,39 @@ import Product from '../../Models/Product';
 
 class CreateOrderService {
   async run({ order }) {
-    const orderExist = await Order.findByPk(order.client_id);
-
-    if (!orderExist) {
+    const clientExist = await Client.findByPk(order.client_id);
+    if (!clientExist) {
       throw new AppError('O cliente informado não existe!');
     }
 
+    const updateStock = await this.updateStock(order.products);
+    if (!updateStock) {
+      throw new AppError(`Não há estoque de um ou mais produtos`);
+    }
+
+    const { products } = order;
+
     const orderCreated = await Order.create(order);
 
-    await orderCreated.addProducts(order.products);
-
+    for (const product of products) {
+      const { id, price, quantity } = product;
+      const findProduct = await Product.findByPk(id);
+      await orderCreated.addProduct(findProduct, {
+        through: {
+          price,
+          quantity,
+        },
+      });
+    }
     const createdOrder = await Order.findByPk(orderCreated.id, {
+      attributes: [
+        'id',
+        'total_value',
+        'payment_date',
+        'payment_method',
+        'discount',
+        'createdAt',
+      ],
       include: [
         {
           model: Client,
@@ -26,13 +48,28 @@ class CreateOrderService {
           model: Product,
           attributes: ['name', 'price', 'cost'],
           through: {
-            attributes: [],
+            attributes: ['price', 'quantity'],
           },
         },
       ],
     });
 
     return createdOrder;
+  }
+
+  async updateStock(products) {
+    for (const product of products) {
+      const { id, quantity } = product;
+      const productFind = await Product.findByPk(id);
+      const newQuantity = productFind.stock_amount - quantity;
+
+      if (newQuantity < 0) {
+        return false;
+      }
+
+      await productFind.update({ stock_amount: newQuantity });
+    }
+    return true;
   }
 }
 
