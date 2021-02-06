@@ -8,12 +8,13 @@ class SumaryValuesService {
     const todayValue = await this.todayOrdersValue(today);
     const weekValue = await this.weeklyOrdersValue(today);
     const monthValue = await this.monthOrdersValue(today);
-    console.log(todayValue, weekValue, monthValue);
+    const monthAmount = await this.monthOrdersAmount(today);
 
     return {
       todayValue,
       weekValue,
       monthValue,
+      monthAmount,
     };
   }
 
@@ -57,6 +58,22 @@ class SumaryValuesService {
   async monthOrdersValue(today) {
     try {
       const value = await Order.sum('total_value', {
+        where: {
+          createdAt: {
+            [Op.between]: [startOfMonth(today), endOfDay(today)],
+          },
+        },
+      });
+
+      return value;
+    } catch (err) {
+      return err.message;
+    }
+  }
+
+  async monthOrdersAmount(today) {
+    try {
+      const value = await Order.count({
         where: {
           createdAt: {
             [Op.between]: [startOfMonth(today), endOfDay(today)],
