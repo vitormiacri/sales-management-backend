@@ -9,5 +9,6 @@ const orderRoutes = Router();
 orderRoutes.use(authMiddleware);
 
 orderRoutes.get('/sumaryOrdersValue', DashboardController.totalOrdersSumary);
+orderRoutes.get('/ordersHistory', DashboardController.ordersHistory);
 
 export default orderRoutes;
