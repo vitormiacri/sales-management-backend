@@ -10,5 +10,7 @@ orderRoutes.use(authMiddleware);
 
 orderRoutes.get('/sumaryOrdersValue', DashboardController.totalOrdersSumary);
 orderRoutes.get('/ordersHistory', DashboardController.ordersHistory);
+orderRoutes.get('/totalValueGraph', DashboardController.totalValueGraph);
+orderRoutes.get('/totalCountGraph', DashboardController.totalCountGraph);
 
 export default orderRoutes;
